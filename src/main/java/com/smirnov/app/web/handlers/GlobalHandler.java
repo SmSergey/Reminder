@@ -15,6 +15,7 @@ public class GlobalHandler {
 
     @ExceptionHandler(BindException.class)
     public ResponseEntity<String> handleValidationErrors(BindException err) {
+        err.printStackTrace();
         FieldError fieldError = Optional.ofNullable(err.getFieldError())
                 .orElse(new FieldError("error", "error", err.getMessage()));
 
@@ -25,6 +26,8 @@ public class GlobalHandler {
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<String> handleError(EntityNotFoundException err) {
+        err.printStackTrace();
+
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(err.getMessage());
@@ -32,6 +35,8 @@ public class GlobalHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleError(Exception err) {
+        err.printStackTrace();
+
         return ResponseEntity
                 .status(500)
                 .body("something went wrong");

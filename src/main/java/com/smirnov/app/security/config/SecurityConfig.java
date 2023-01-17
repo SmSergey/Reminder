@@ -12,10 +12,9 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests()
-                .anyRequest().authenticated()
-                .and()
-                .oauth2Login();
-                return http.build();
+        return http.authorizeHttpRequests()
+                .anyRequest().authenticated().and()
+                .oauth2Login().and()
+                .build();
     }
 }
