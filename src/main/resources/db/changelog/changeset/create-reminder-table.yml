@@ -1,0 +1,27 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-reminder
+      author: Smirnov Sergey
+      changes:
+        - createTable:
+            tableName: reminder
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: title
+                  type: varchar(255)
+              - column:
+                  name: description
+                  type: varchar(4096)
+              - column:
+                  name: remind
+                  type: datetime
+              - column:
+                  name: user_id
+                  type: bigint
