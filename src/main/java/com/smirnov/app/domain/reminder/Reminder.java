@@ -1,4 +1,4 @@
-package com.smirnov.reminder.domain.reminder;
+package com.smirnov.app.domain.reminder;
 
 
 import jakarta.persistence.*;

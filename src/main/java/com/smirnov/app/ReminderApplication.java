@@ -1,4 +1,4 @@
-package com.smirnov.reminder;
+package com.smirnov.app;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
