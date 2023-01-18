@@ -4,6 +4,7 @@ import com.smirnov.app.web.advices.dto.CommonErrorResponse;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -13,6 +14,17 @@ import java.util.Optional;
 
 @RestControllerAdvice
 public class GlobalErrorAdvice {
+
+    @ExceptionHandler(HttpMessageConversionException.class)
+    public ResponseEntity<CommonErrorResponse> handleValidationErrors(HttpMessageConversionException err) {
+        err.printStackTrace();
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new CommonErrorResponse(
+                        HttpStatus.BAD_REQUEST.value(), err.getMessage())
+                );
+    }
 
     @ExceptionHandler(BindException.class)
     public ResponseEntity<CommonErrorResponse> handleValidationErrors(BindException err) {

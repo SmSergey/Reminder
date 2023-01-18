@@ -4,6 +4,7 @@ import com.smirnov.app.common.exceptions.ForbiddenException;
 import com.smirnov.app.domain.reminder.dto.CreateReminderRequestDto;
 import com.smirnov.app.domain.reminder.dto.DeleteReminderRequestDto;
 import com.smirnov.app.domain.reminder.dto.ListRemindersResponseDto;
+import com.smirnov.app.domain.reminder.dto.UpdateReminderRequestDto;
 import com.smirnov.app.domain.user.User;
 import com.smirnov.app.domain.user.UserRepository;
 import com.smirnov.app.domain.user.UserService;
@@ -107,6 +108,31 @@ public class ReminderController {
                 .status(HttpStatus.NO_CONTENT).build();
     }
 
+    @PatchMapping("/reminder/update")
+    public ResponseEntity<Reminder> updateEntity(
+            OAuth2AuthenticationToken token,
+            @RequestBody UpdateReminderRequestDto dto
+    ) {
+
+        final String email = token.getPrincipal().getAttribute("email");
+
+        User owner = userRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("user don't have such reminder"));
+
+        Reminder reminder = reminderRepository.findById(dto.getId())
+                .orElseThrow(() -> new EntityNotFoundException("reminder with this id wasn't found"));
+
+        if (!owner.getId().equals(reminder.getOwner().getId())) {
+            throw new ForbiddenException("you are not an owner of this reminder");
+        }
+
+        reminderRepository.save(reminder.mergeWithUpdateDto(dto));
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(reminder);
+    }
+
     @GetMapping("/sort")
     public ResponseEntity<List<Reminder>> getSortedReminders(
             @RegisteredOAuth2AuthorizedClient("google") OAuth2AuthorizedClient authorizedClient,
@@ -135,7 +161,7 @@ public class ReminderController {
             @RequestParam(name = "toDate", required = false, defaultValue = "9999-12-00") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate,
             @RequestParam(name = "fromTime", required = false, defaultValue = "00:00:00") @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm:ss") LocalTime fromTime,
             @RequestParam(name = "toTime", required = false, defaultValue = "23:59:59") @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm:ss") LocalTime toTime
-            ) {
+    ) {
         final String phoneNumber = userService.getPhoneNumber(authorizedClient.getAccessToken());
         final String email = token.getPrincipal().getAttribute("email");
 
