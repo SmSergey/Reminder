@@ -18,6 +18,10 @@ spring:
       client:
         registration:
           google:
+            scope:
+              - email
+              - profile
+              - https://www.googleapis.com/auth/user.phonenumbers.read
             client-id: ${GOOGLE_CLIENT_ID}
             client-secret: ${GOOGLE_CLIENT_SECRET}
 server:
