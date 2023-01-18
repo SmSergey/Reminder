@@ -1,14 +1,18 @@
 package com.smirnov.app.domain.reminder.dto;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.smirnov.app.domain.reminder.Reminder;
+import com.smirnov.app.domain.reminder.ReminderViews;
 import lombok.Data;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
 
 @Data
+@JsonView(ReminderViews.Public.class)
 public class ListRemindersResponseDto {
 
+    @JsonView(ReminderViews.Public.class)
     private List<Reminder> content;
 
     private int currentPage;

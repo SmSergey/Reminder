@@ -1,6 +1,7 @@
 package com.smirnov.app.domain.reminder;
 
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.smirnov.app.domain.reminder.dto.UpdateReminderRequestDto;
 import com.smirnov.app.domain.user.User;
 import jakarta.persistence.*;
@@ -22,17 +23,20 @@ import java.util.Optional;
 public class Reminder {
 
     @Id
-    @Column(nullable = false)
+    @JsonView(ReminderViews.Public.class)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Setter()
+    @JsonView(ReminderViews.Public.class)
     private String title;
 
     @Setter()
+    @JsonView(ReminderViews.Public.class)
     private String description;
 
     @Setter()
+    @JsonView(ReminderViews.Public.class)
     private LocalDateTime remind;
 
     @ManyToOne

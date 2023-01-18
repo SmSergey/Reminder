@@ -1,5 +1,6 @@
 package com.smirnov.app.domain.reminder;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.smirnov.app.common.exceptions.ForbiddenException;
 import com.smirnov.app.domain.reminder.dto.CreateReminderRequestDto;
 import com.smirnov.app.domain.reminder.dto.DeleteReminderRequestDto;
@@ -38,6 +39,7 @@ public class ReminderController {
 
 
     @GetMapping("/list")
+    @JsonView(ReminderViews.Public.class)
     public ResponseEntity<ListRemindersResponseDto> getAllReminders(
             @RegisteredOAuth2AuthorizedClient("google") OAuth2AuthorizedClient authorizedClient,
             OAuth2AuthenticationToken token,
@@ -72,11 +74,10 @@ public class ReminderController {
         //need to rewrite phone number to keep it in actual state
         owner.setPhone(phoneNumber);
 
-        Reminder createdReminder = reminderService.createReminder(createReminderDto, owner);
+        reminderService.createReminder(createReminderDto, owner);
 
         return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(createdReminder.getId());
+                .status(HttpStatus.NO_CONTENT).build();
     }
 
     @DeleteMapping("/reminder/delete")
@@ -103,6 +104,7 @@ public class ReminderController {
     }
 
     @PatchMapping("/reminder/update")
+    @JsonView(ReminderViews.Public.class)
     public ResponseEntity<Reminder> updateEntity(
             OAuth2AuthenticationToken token,
             @RequestBody UpdateReminderRequestDto dto
@@ -128,6 +130,7 @@ public class ReminderController {
     }
 
     @GetMapping("/search")
+    @JsonView(ReminderViews.Public.class)
     public ResponseEntity<ListRemindersResponseDto> searchReminder(
             @RegisteredOAuth2AuthorizedClient("google") OAuth2AuthorizedClient authorizedClient,
             OAuth2AuthenticationToken token,
@@ -149,6 +152,7 @@ public class ReminderController {
     }
 
     @GetMapping("/sort")
+    @JsonView(ReminderViews.Public.class)
     public ResponseEntity<List<Reminder>> getSortedReminders(
             @RegisteredOAuth2AuthorizedClient("google") OAuth2AuthorizedClient authorizedClient,
             OAuth2AuthenticationToken token,
@@ -169,6 +173,7 @@ public class ReminderController {
 
 
     @GetMapping("/filtr")
+    @JsonView(ReminderViews.Public.class)
     public ResponseEntity<List<Reminder>> getFilteredReminders(
             @RegisteredOAuth2AuthorizedClient("google") OAuth2AuthorizedClient authorizedClient,
             OAuth2AuthenticationToken token,

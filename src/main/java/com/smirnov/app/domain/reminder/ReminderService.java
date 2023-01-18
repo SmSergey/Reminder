@@ -13,7 +13,6 @@ public class ReminderService {
 
     public Reminder createReminder(CreateReminderRequestDto dto, User owner) {
 
-
         Reminder newReminder = new Reminder();
 
         newReminder.setDescription(dto.getDescription());
