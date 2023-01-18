@@ -1,6 +1,7 @@
 package com.smirnov.app.domain.reminder;
 
 
+import com.smirnov.app.domain.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,6 +27,8 @@ public class Reminder {
     @Setter()
     private LocalDateTime remind;
 
-    @Setter
-    private Long userId;
+    @ManyToOne
+    @Setter()
+    @JoinColumn(nullable = false, name = "user_id")
+    private User owner;
 }
