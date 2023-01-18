@@ -1,5 +1,6 @@
-package com.smirnov.app.web.handlers;
+package com.smirnov.app.web.advices;
 
+import com.smirnov.app.web.advices.dto.CommonErrorResponse;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,34 +12,43 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.Optional;
 
 @RestControllerAdvice
-public class GlobalHandler {
+public class GlobalErrorAdvice {
 
     @ExceptionHandler(BindException.class)
-    public ResponseEntity<String> handleValidationErrors(BindException err) {
+    public ResponseEntity<CommonErrorResponse> handleValidationErrors(BindException err) {
         err.printStackTrace();
         FieldError fieldError = Optional.ofNullable(err.getFieldError())
                 .orElse(new FieldError("error", "error", err.getMessage()));
 
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(fieldError.getField() + " : " + fieldError);
+                .body(new CommonErrorResponse(
+                        HttpStatus.BAD_REQUEST.value(),
+                        fieldError.getField() + " : " + fieldError)
+                );
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<String> handleError(EntityNotFoundException err) {
+    public ResponseEntity<CommonErrorResponse> handleError(EntityNotFoundException err) {
         err.printStackTrace();
 
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
-                .body(err.getMessage());
+                .body(new CommonErrorResponse(
+                        HttpStatus.NOT_FOUND.value(),
+                        err.getMessage()
+                ));
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleError(Exception err) {
+    public ResponseEntity<CommonErrorResponse> handleError(Exception err) {
         err.printStackTrace();
 
         return ResponseEntity
-                .status(500)
-                .body("something went wrong");
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new CommonErrorResponse(
+                        HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                        err.getMessage()
+                ));
     }
 }
