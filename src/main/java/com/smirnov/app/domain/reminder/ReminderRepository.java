@@ -14,6 +14,14 @@ public interface ReminderRepository extends JpaRepository<Reminder, Long> {
 
     Page<Reminder> findByOwner(User owner, Pageable request);
 
+    @Query(value = "select r from Reminder r where r.owner.id = :ownerId and" +
+            "((r.title like concat('%',:query,'%')) or" +
+            "(r.description like concat('%', :query,'%')) or" +
+            "(cast(cast(r.remind as date) as string) like concat('%', :query,'%')) or" +
+            "(cast(cast(r.remind as time) as string) like concat('%', :query,'%'))" +
+            ")")
+    Page<Reminder> findByQuery(Long ownerId, String query, Pageable pageable);
+
     @Query(value = "select r from Reminder r " +
             "where " +
             "(r.remind between :fromDate and :toDate) and cast(r.remind as TIME) between :fromTime and :toTime " +

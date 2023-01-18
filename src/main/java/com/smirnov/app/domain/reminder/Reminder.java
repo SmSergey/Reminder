@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Getter
 @Entity
-@Table
+@Table(name = "reminders")
 public class Reminder {
 
     @Id

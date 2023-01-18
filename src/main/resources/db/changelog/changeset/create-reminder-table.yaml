@@ -1,10 +1,10 @@
 databaseChangeLog:
   - changeSet:
-      id: create-reminder
+      id: create-reminders
       author: Smirnov Sergey
       changes:
         - createTable:
-            tableName: reminder
+            tableName: reminders
             columns:
               - column:
                   name: id

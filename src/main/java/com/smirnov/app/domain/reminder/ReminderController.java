@@ -50,13 +50,7 @@ public class ReminderController {
                 .orElseGet(() -> userRepository.save(new User(phoneNumber, email)));
 
         Page<Reminder> pageReminders = reminderRepository.findByOwner(owner, pageRequest);
-
-        ListRemindersResponseDto response = new ListRemindersResponseDto();
-        response.setContent(pageReminders.getContent());
-        response.setPageSize(pageRequest.getPageSize());
-        response.setCurrentPage(pageReminders.getNumber());
-        response.setTotalElements(pageReminders.getNumberOfElements());
-        response.setTotalPages(pageReminders.getTotalPages());
+        ListRemindersResponseDto response = new ListRemindersResponseDto(pageReminders);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -131,6 +125,27 @@ public class ReminderController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(reminder);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<ListRemindersResponseDto> searchReminder(
+            @RegisteredOAuth2AuthorizedClient("google") OAuth2AuthorizedClient authorizedClient,
+            OAuth2AuthenticationToken token,
+            @RequestParam("query") String query,
+            Pageable pageable
+    ) {
+        final String phoneNumber = userService.getPhoneNumber(authorizedClient.getAccessToken());
+        final String email = token.getPrincipal().getAttribute("email");
+
+        User owner = userRepository.findByEmail(email)
+                .orElseGet(() -> userRepository.save(new User(phoneNumber, email)));
+
+        Page<Reminder> pageReminders = reminderRepository.findByQuery(owner.getId(), query, pageable);
+        ListRemindersResponseDto response = new ListRemindersResponseDto(pageReminders);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(response);
     }
 
     @GetMapping("/sort")

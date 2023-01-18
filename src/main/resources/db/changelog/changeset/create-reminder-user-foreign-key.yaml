@@ -1,11 +1,11 @@
 databaseChangeLog:
   - changeSet:
-      id: add-foreign-key-user-reminder
+      id: add-foreign-key-user-reminders
       author: smirnov_sergey
       changes:
         - addForeignKeyConstraint:
             baseColumnNames: user_id
-            baseTableName: reminder
+            baseTableName: reminders
             baseTableSchemaName: public
             constraintName: fk_reminder_user
             referencedColumnNames: id
