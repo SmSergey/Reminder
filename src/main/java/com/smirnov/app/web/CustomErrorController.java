@@ -3,13 +3,14 @@ package com.smirnov.app.web;
 import com.smirnov.app.web.advices.dto.CommonErrorResponse;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-public class ErrorController {
+public class CustomErrorController implements ErrorController {
 
     @RequestMapping("/error")
     public ResponseEntity<CommonErrorResponse> handleError(HttpServletRequest request) {
