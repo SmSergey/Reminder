@@ -12,6 +12,12 @@ import java.util.Optional;
 
 @Getter
 @Entity
+@NamedEntityGraph(
+        name = "owner-entity-graph",
+        attributeNodes = {
+                @NamedAttributeNode("owner"),
+        }
+)
 @Table(name = "reminders")
 public class Reminder {
 
