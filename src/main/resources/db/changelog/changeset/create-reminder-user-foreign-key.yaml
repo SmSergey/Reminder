@@ -9,6 +9,8 @@ databaseChangeLog:
             baseTableSchemaName: public
             constraintName: fk_reminder_user
             referencedColumnNames: id
+            onDelete: CASCADE
+            onUpdate: CASCADE
             referencedTableName: users
             referencedTableSchemaName: public
             validate: true

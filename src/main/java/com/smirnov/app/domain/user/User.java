@@ -13,6 +13,7 @@ import lombok.Setter;
 public class User {
 
     @Id
+    @Column(updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -20,7 +21,6 @@ public class User {
 
     @Column(unique = true, nullable = false)
     private String email;
-
 
     public User(String phone, String email) {
         this.phone = phone;
