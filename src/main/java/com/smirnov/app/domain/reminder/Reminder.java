@@ -5,7 +5,9 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.smirnov.app.domain.reminder.dto.UpdateReminderRequestDto;
 import com.smirnov.app.domain.user.User;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
@@ -20,6 +22,7 @@ import java.util.Optional;
         }
 )
 @Table(name = "reminders")
+@AllArgsConstructor @NoArgsConstructor
 public class Reminder {
 
     @Id

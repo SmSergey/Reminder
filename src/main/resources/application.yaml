@@ -24,6 +24,28 @@ spring:
               - https://www.googleapis.com/auth/user.phonenumbers.read
             client-id: ${GOOGLE_CLIENT_ID}
             client-secret: ${GOOGLE_CLIENT_SECRET}
+  mail:
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          starttls.enable: ${MAIL_SMTP_STARTTLS_ENABLED}
+          auth: ${MAIL_SMTP_AUTH_ENABLED}
+          connectiontimeout: ${MAIL_SMTP_CONNECTION_TIMEOUT_ENABLED}
+          timeout: ${MAIL_SMTP_CONNECTION_TIMEOUT_MS}
+          writetimeout:  ${MAIL_SMTP_CONNECTION_WRITE_TIMEOUT_MS}
 server:
   servlet:
     context-path: /api/v1
+  address: ${SERVER_ADDRESS_IP}
+  port: ${SERVER_PORT}
+  ssl:
+    enabled: ${SERVER_SSL_ENABLED}
+
+telegram:
+  bot:
+    username: ${TELEGRAM_BOT_USERNAME}
+    token: ${TELEGRAM_BOT_TOKEN}

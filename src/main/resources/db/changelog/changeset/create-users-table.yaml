@@ -20,3 +20,8 @@ databaseChangeLog:
               - column:
                   name: email
                   type: varchar(255)
+              - column:
+                  name: telegram_chat_id
+                  type: bigint
+                  constraints:
+                    unique: true

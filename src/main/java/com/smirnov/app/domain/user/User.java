@@ -22,6 +22,8 @@ public class User {
     @Column(unique = true, nullable = false)
     private String email;
 
+    private Long telegramChatId;
+
     public User(String phone, String email) {
         this.phone = phone;
         this.email = email;
