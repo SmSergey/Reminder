@@ -60,7 +60,7 @@ public class GlobalErrorAdvice {
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new CommonErrorResponse(
                         HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                        err.getMessage()
+                        "something went wrong"
                 ));
     }
 }

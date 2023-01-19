@@ -3,8 +3,7 @@ package com.smirnov.app.domain.user;
 
 import com.smirnov.app.domain.user.dto.GetUserPhoneResponse;
 import com.smirnov.app.domain.user.dto.UserPhone;
-import com.smirnov.app.google.GoogleConfig;
-import com.smirnov.app.google.GoogleService;
+import com.smirnov.app.google.GoogleHelper;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.http.HttpEntity;
@@ -30,9 +29,9 @@ public class UserService {
 
     private String retrieveUserPhoneNumber(OAuth2AccessToken token) {
         GetUserPhoneResponse response = restTemplate.exchange(
-                GoogleConfig.Endpoints.GET_USER_PHONE_NUMBER,
+                GoogleHelper.Endpoints.GET_USER_PHONE_NUMBER,
                 HttpMethod.GET,
-                new HttpEntity<>(GoogleService.getGoogleAuthorizeHeaders(token.getTokenValue())),
+                new HttpEntity<>(GoogleHelper.getGoogleAuthorizeHeaders(token.getTokenValue())),
                 GetUserPhoneResponse.class
         ).getBody();
 

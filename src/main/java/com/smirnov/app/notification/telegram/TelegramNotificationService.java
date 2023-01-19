@@ -21,6 +21,10 @@ public class TelegramNotificationService implements NotificationService {
     @Override
     public void sendNotification(User owner, Reminder reminder) {
         Long chatId = owner.getTelegramChatId();
+        if (chatId == null) {
+            log.info("{} not connected to telegram", owner.getEmail());
+            return;
+        }
         SendMessage responseMessage = SendMessage.builder()
                 .chatId(chatId)
                 .disableNotification(false)
