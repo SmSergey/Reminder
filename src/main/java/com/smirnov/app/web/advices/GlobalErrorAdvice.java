@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -23,6 +24,17 @@ public class GlobalErrorAdvice {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new CommonErrorResponse(
                         HttpStatus.BAD_REQUEST.value(), err.getMessage())
+                );
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<CommonErrorResponse> handleValidationErrors(HttpRequestMethodNotSupportedException err) {
+        err.printStackTrace();
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new CommonErrorResponse(
+                        HttpStatus.BAD_REQUEST.value(), "wrong method")
                 );
     }
 

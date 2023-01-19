@@ -10,9 +10,7 @@ public class TelegramNotificationMessageConfig {
     public static class Messages {
         public static final String BASE_NOTIFICATION_MESSAGE_TEMPLATE =
                 "====================== Notification! ===================\n" +
-                        "Title: {0}\n" +
-                        "Description: {1}\n" +
-                        "Time: {2}\n" +
+                        "Description: {0}\n" +
                 "========================================================\n";
         public static final String ALREADY_LINKED = "Your Reminder account already linked.";
         public static final String SUCCESS_LINK = "Hello {0}, since now you will be notified with your reminders!";

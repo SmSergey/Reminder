@@ -74,10 +74,10 @@ public class ReminderController {
         //need to rewrite phone number to keep it in actual state
         owner.setPhone(phoneNumber);
 
-        reminderService.createReminder(createReminderDto, owner);
+        Reminder reminder = reminderService.createReminder(createReminderDto, owner);
 
         return ResponseEntity
-                .status(HttpStatus.NO_CONTENT).build();
+                .status(HttpStatus.CREATED).body(reminder.getId());
     }
 
     @DeleteMapping("/reminder/delete")

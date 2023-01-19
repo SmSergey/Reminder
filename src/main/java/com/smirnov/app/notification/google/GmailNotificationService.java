@@ -23,7 +23,7 @@ public class GmailNotificationService implements NotificationService {
 
         mailMessage.setFrom(GmailSenderConfig.APPLICATION_NAME);
         mailMessage.setTo(owner.getEmail());
-        mailMessage.setSubject(NotificationMessageConfig.NOTIFICATION_SUBJECT);
+        mailMessage.setSubject(reminder.getTitle());
         mailMessage.setText(NotificationMessageConfig.formatReminder(reminder));
 
         mailSender.send(mailMessage);
