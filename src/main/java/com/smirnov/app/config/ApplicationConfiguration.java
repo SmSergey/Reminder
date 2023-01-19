@@ -22,9 +22,4 @@ public class ApplicationConfiguration {
     public String getServerUrl() {
         return (ssl.isEnabled() ? "https://" : "http://") + address + ":" + port;
     }
-
-    @PostConstruct
-    public void init() {
-        log.info("Loaded application config: address: {}, port: {}, sslEnabled: {}", address, port, ssl.isEnabled());
-    }
 }
