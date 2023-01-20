@@ -282,7 +282,6 @@ class ReminderControllerTest {
 
     @Test
     void deleteReminderWithNotValidJsonSchemaTest() throws Exception {
-        DeleteReminderRequestDto requestBody = new DeleteReminderRequestDto(mockReminder.getId());
 
         Mockito.when(reminderRepository.findById(mockReminder.getId()))
                 .thenReturn(Optional.of(mockReminder));
