@@ -82,7 +82,7 @@ public class ReminderController {
     @DeleteMapping("/reminder/delete")
     public ResponseEntity<Long> deleteReminder(
             OAuth2AuthenticationToken token,
-            @RequestBody DeleteReminderRequestDto dto
+            @RequestBody @Valid DeleteReminderRequestDto dto
     ) {
         final String email = token.getPrincipal().getAttribute("email");
 
