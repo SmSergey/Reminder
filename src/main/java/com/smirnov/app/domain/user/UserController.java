@@ -16,17 +16,15 @@ import java.text.MessageFormat;
 public class UserController {
 
     private final UserRepository userRepository;
-    private final UserService userService;
     private final ReminderBotConfiguration reminderBotConfiguration;
 
     @GetMapping("/account/telegram/")
     public RedirectView linkTelegram(@RegisteredOAuth2AuthorizedClient("google") OAuth2AuthorizedClient authorizedClient,
                                      OAuth2AuthenticationToken token) {
-        final String phoneNumber = userService.getPhoneNumber(authorizedClient.getAccessToken());
         final String email = token.getPrincipal().getAttribute("email");
 
         User owner = userRepository.findByEmail(email)
-                .orElseGet(() -> userRepository.save(new User(phoneNumber, email)));
+                .orElseGet(() -> userRepository.save(new User(email)));
         return new RedirectView(MessageFormat.format("https://t.me/{0}?start={1}", reminderBotConfiguration.getUsername(), owner.getId()));
     }
 }

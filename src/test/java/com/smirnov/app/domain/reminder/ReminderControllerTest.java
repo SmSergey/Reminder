@@ -7,7 +7,6 @@ import com.smirnov.app.domain.reminder.dto.DeleteReminderRequestDto;
 import com.smirnov.app.domain.reminder.dto.UpdateReminderRequestDto;
 import com.smirnov.app.domain.user.User;
 import com.smirnov.app.domain.user.UserRepository;
-import com.smirnov.app.domain.user.UserService;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -51,15 +50,13 @@ class ReminderControllerTest {
     private ReminderRepository reminderRepository;
     @MockBean
     private ReminderService reminderService;
-    @MockBean
-    private UserService userService;
 
     private final OAuth2AccessToken mockAccessToken = new OAuth2AccessToken(OAuth2AccessToken.TokenType.BEARER,
             "token_value",
             Instant.now(),
             Instant.now());
 
-    private final User mockUser = new User(46L, "+79385501077", "smirnov@gmail.com", 140L);
+    private final User mockUser = new User(46L, "smirnov@gmail.com", 140L);
 
     private final Pageable mockPageableDefault = PageRequest.of(0, 10, Sort.unsorted());
 
@@ -77,9 +74,6 @@ class ReminderControllerTest {
 
     @BeforeEach
     void initCall() {
-        Mockito.when(userService.getPhoneNumber(mockAccessToken))
-                .thenReturn(mockUser.getPhone());
-
         Mockito.when(userRepository.findByEmail(mockUser.getEmail()))
                 .thenReturn(Optional.of(mockUser));
     }

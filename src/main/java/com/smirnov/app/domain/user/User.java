@@ -19,15 +19,12 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String phone;
-
     @Column(unique = true, nullable = false)
     private String email;
 
     private Long telegramChatId;
 
-    public User(String phone, String email) {
-        this.phone = phone;
+    public User(String email) {
         this.email = email;
     }
 }

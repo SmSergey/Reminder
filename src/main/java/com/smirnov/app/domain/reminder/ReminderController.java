@@ -5,7 +5,6 @@ import com.smirnov.app.common.exceptions.ForbiddenException;
 import com.smirnov.app.domain.reminder.dto.*;
 import com.smirnov.app.domain.user.User;
 import com.smirnov.app.domain.user.UserRepository;
-import com.smirnov.app.domain.user.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -33,21 +32,18 @@ public class ReminderController {
     private final ReminderRepository reminderRepository;
 
     private final ReminderService reminderService;
-    private final UserService userService;
 
 
     @GetMapping("/list")
     @JsonView(ReminderViews.Public.class)
     public ResponseEntity<ListRemindersResponseDto> getAllReminders(
-            @RegisteredOAuth2AuthorizedClient("google") OAuth2AuthorizedClient authorizedClient,
             OAuth2AuthenticationToken token,
             @PageableDefault Pageable Pageable
     ) {
-        final String phoneNumber = userService.getPhoneNumber(authorizedClient.getAccessToken());
         final String email = token.getPrincipal().getAttribute("email");
 
         User owner = userRepository.findByEmail(email)
-                .orElseGet(() -> userRepository.save(new User(phoneNumber, email)));
+                .orElseGet(() -> userRepository.save(new User(email)));
 
         Page<Reminder> pageReminders = reminderRepository.findByOwner(owner, Pageable);
         ListRemindersResponseDto response = new ListRemindersResponseDto(pageReminders);
@@ -59,18 +55,13 @@ public class ReminderController {
 
     @PostMapping("/reminder/create")
     public ResponseEntity<CreateReminderResponseDto> createReminder(
-            @RegisteredOAuth2AuthorizedClient("google") OAuth2AuthorizedClient authorizedClient,
             @RequestBody @Valid CreateReminderRequestDto createReminderDto,
             OAuth2AuthenticationToken token
     ) {
-        final String phoneNumber = userService.getPhoneNumber(authorizedClient.getAccessToken());
         final String email = token.getPrincipal().getAttribute("email");
 
         User owner = userRepository.findByEmail(email)
-                .orElseGet(() -> userRepository.save(new User(phoneNumber, email)));
-
-        //need to rewrite phone number to keep it in actual state
-        owner.setPhone(phoneNumber);
+                .orElseGet(() -> userRepository.save(new User(email)));
 
         Reminder reminder = reminderService.createReminder(createReminderDto, owner);
 
@@ -87,7 +78,7 @@ public class ReminderController {
         final String email = token.getPrincipal().getAttribute("email");
 
         User owner = userRepository.findByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException("user don't have such reminder"));
+                .orElseThrow(() -> new EntityNotFoundException("reminder with this id wasn't found"));
 
         Reminder reminder = reminderRepository.findById(dto.getId())
                 .orElseThrow(() -> new EntityNotFoundException("reminder with this id wasn't found"));
@@ -108,7 +99,6 @@ public class ReminderController {
             OAuth2AuthenticationToken token,
             @RequestBody @Valid UpdateReminderRequestDto dto
     ) {
-
         final String email = token.getPrincipal().getAttribute("email");
 
         User owner = userRepository.findByEmail(email)
@@ -131,16 +121,14 @@ public class ReminderController {
     @GetMapping("/search")
     @JsonView(ReminderViews.Public.class)
     public ResponseEntity<ListRemindersResponseDto> searchReminder(
-            @RegisteredOAuth2AuthorizedClient("google") OAuth2AuthorizedClient authorizedClient,
             OAuth2AuthenticationToken token,
             @RequestParam("query") @Length(max = 255) String query,
             Pageable pageable
     ) {
-        final String phoneNumber = userService.getPhoneNumber(authorizedClient.getAccessToken());
         final String email = token.getPrincipal().getAttribute("email");
 
         User owner = userRepository.findByEmail(email)
-                .orElseGet(() -> userRepository.save(new User(phoneNumber, email)));
+                .orElseGet(() -> userRepository.save(new User(email)));
 
         Page<Reminder> pageReminders = reminderRepository.findByQuery(owner.getId(), query, pageable);
         ListRemindersResponseDto response = new ListRemindersResponseDto(pageReminders);
@@ -157,11 +145,10 @@ public class ReminderController {
             OAuth2AuthenticationToken token,
             Pageable Pageable
     ) {
-        final String phoneNumber = userService.getPhoneNumber(authorizedClient.getAccessToken());
         final String email = token.getPrincipal().getAttribute("email");
 
         User owner = userRepository.findByEmail(email)
-                .orElseGet(() -> userRepository.save(new User(phoneNumber, email)));
+                .orElseGet(() -> userRepository.save(new User(email)));
 
         List<Reminder> filteredReminders = reminderRepository.findByOwner(owner, Pageable).getContent();
 
@@ -174,18 +161,16 @@ public class ReminderController {
     @GetMapping("/filtr")
     @JsonView(ReminderViews.Public.class)
     public ResponseEntity<List<Reminder>> getFilteredReminders(
-            @RegisteredOAuth2AuthorizedClient("google") OAuth2AuthorizedClient authorizedClient,
             OAuth2AuthenticationToken token,
             @RequestParam(name = "fromDate", required = false, defaultValue = "1990-00-00") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
             @RequestParam(name = "toDate", required = false, defaultValue = "9999-12-00") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate,
             @RequestParam(name = "fromTime", required = false, defaultValue = "00:00:00") @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm:ss") LocalTime fromTime,
             @RequestParam(name = "toTime", required = false, defaultValue = "23:59:59") @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm:ss") LocalTime toTime
     ) {
-        final String phoneNumber = userService.getPhoneNumber(authorizedClient.getAccessToken());
         final String email = token.getPrincipal().getAttribute("email");
 
         User owner = userRepository.findByEmail(email)
-                .orElseGet(() -> userRepository.save(new User(phoneNumber, email)));
+                .orElseGet(() -> userRepository.save(new User(email)));
 
         List<Reminder> filteredReminders = reminderRepository.findRemindersFilteredByDateAndTime(
                 owner.getId(),

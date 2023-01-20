@@ -15,9 +15,6 @@ databaseChangeLog:
                     nullable: false
                     unique: true
               - column:
-                  name: phone
-                  type: varchar(255)
-              - column:
                   name: email
                   type: varchar(255)
               - column:
