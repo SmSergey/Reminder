@@ -1,7 +1,5 @@
 package com.smirnov.app.domain.reminder;
 
-import lombok.Data;
-
 import java.time.LocalDateTime;
 
 public class ReminderViews {

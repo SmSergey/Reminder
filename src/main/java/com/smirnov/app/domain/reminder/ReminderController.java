@@ -2,17 +2,15 @@ package com.smirnov.app.domain.reminder;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.smirnov.app.common.exceptions.ForbiddenException;
-import com.smirnov.app.domain.reminder.dto.CreateReminderRequestDto;
-import com.smirnov.app.domain.reminder.dto.DeleteReminderRequestDto;
-import com.smirnov.app.domain.reminder.dto.ListRemindersResponseDto;
-import com.smirnov.app.domain.reminder.dto.UpdateReminderRequestDto;
+import com.smirnov.app.domain.reminder.dto.*;
 import com.smirnov.app.domain.user.User;
 import com.smirnov.app.domain.user.UserRepository;
 import com.smirnov.app.domain.user.UserService;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -43,7 +41,7 @@ public class ReminderController {
     public ResponseEntity<ListRemindersResponseDto> getAllReminders(
             @RegisteredOAuth2AuthorizedClient("google") OAuth2AuthorizedClient authorizedClient,
             OAuth2AuthenticationToken token,
-            @PageableDefault Pageable pageRequest
+            @PageableDefault Pageable Pageable
     ) {
         final String phoneNumber = userService.getPhoneNumber(authorizedClient.getAccessToken());
         final String email = token.getPrincipal().getAttribute("email");
@@ -51,7 +49,7 @@ public class ReminderController {
         User owner = userRepository.findByEmail(email)
                 .orElseGet(() -> userRepository.save(new User(phoneNumber, email)));
 
-        Page<Reminder> pageReminders = reminderRepository.findByOwner(owner, pageRequest);
+        Page<Reminder> pageReminders = reminderRepository.findByOwner(owner, Pageable);
         ListRemindersResponseDto response = new ListRemindersResponseDto(pageReminders);
 
         return ResponseEntity
@@ -60,9 +58,9 @@ public class ReminderController {
     }
 
     @PostMapping("/reminder/create")
-    public ResponseEntity<Long> createReminder(
+    public ResponseEntity<CreateReminderResponseDto> createReminder(
             @RegisteredOAuth2AuthorizedClient("google") OAuth2AuthorizedClient authorizedClient,
-            @RequestBody CreateReminderRequestDto createReminderDto,
+            @RequestBody @Valid CreateReminderRequestDto createReminderDto,
             OAuth2AuthenticationToken token
     ) {
         final String phoneNumber = userService.getPhoneNumber(authorizedClient.getAccessToken());
@@ -77,7 +75,8 @@ public class ReminderController {
         Reminder reminder = reminderService.createReminder(createReminderDto, owner);
 
         return ResponseEntity
-                .status(HttpStatus.CREATED).body(reminder.getId());
+                .status(HttpStatus.CREATED)
+                .body(new CreateReminderResponseDto(reminder.getId()));
     }
 
     @DeleteMapping("/reminder/delete")
@@ -107,7 +106,7 @@ public class ReminderController {
     @JsonView(ReminderViews.Public.class)
     public ResponseEntity<Reminder> updateEntity(
             OAuth2AuthenticationToken token,
-            @RequestBody UpdateReminderRequestDto dto
+            @RequestBody @Valid UpdateReminderRequestDto dto
     ) {
 
         final String email = token.getPrincipal().getAttribute("email");
@@ -134,7 +133,7 @@ public class ReminderController {
     public ResponseEntity<ListRemindersResponseDto> searchReminder(
             @RegisteredOAuth2AuthorizedClient("google") OAuth2AuthorizedClient authorizedClient,
             OAuth2AuthenticationToken token,
-            @RequestParam("query") String query,
+            @RequestParam("query") @Length(max = 255) String query,
             Pageable pageable
     ) {
         final String phoneNumber = userService.getPhoneNumber(authorizedClient.getAccessToken());
@@ -156,7 +155,7 @@ public class ReminderController {
     public ResponseEntity<List<Reminder>> getSortedReminders(
             @RegisteredOAuth2AuthorizedClient("google") OAuth2AuthorizedClient authorizedClient,
             OAuth2AuthenticationToken token,
-            PageRequest pageRequest
+            Pageable Pageable
     ) {
         final String phoneNumber = userService.getPhoneNumber(authorizedClient.getAccessToken());
         final String email = token.getPrincipal().getAttribute("email");
@@ -164,7 +163,7 @@ public class ReminderController {
         User owner = userRepository.findByEmail(email)
                 .orElseGet(() -> userRepository.save(new User(phoneNumber, email)));
 
-        List<Reminder> filteredReminders = reminderRepository.findByOwner(owner, pageRequest).getContent();
+        List<Reminder> filteredReminders = reminderRepository.findByOwner(owner, Pageable).getContent();
 
         return ResponseEntity
                 .status(HttpStatus.OK)

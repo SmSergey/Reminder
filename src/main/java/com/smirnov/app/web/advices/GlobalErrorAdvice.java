@@ -2,9 +2,11 @@ package com.smirnov.app.web.advices;
 
 import com.smirnov.app.web.advices.dto.CommonErrorResponse;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConversionException;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -35,6 +37,28 @@ public class GlobalErrorAdvice {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new CommonErrorResponse(
                         HttpStatus.BAD_REQUEST.value(), "wrong method")
+                );
+    }
+
+    @ExceptionHandler(PropertyReferenceException.class)
+    public ResponseEntity<CommonErrorResponse> handleValidationErrors(PropertyReferenceException err) {
+        err.printStackTrace();
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new CommonErrorResponse(
+                        HttpStatus.BAD_REQUEST.value(), "property not supported")
+                );
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<CommonErrorResponse> handleValidationErrors(HttpMessageNotReadableException err) {
+        err.printStackTrace();
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new CommonErrorResponse(
+                        HttpStatus.BAD_REQUEST.value(), "not a valid json schema")
                 );
     }
 
