@@ -14,7 +14,7 @@ public class TelegramNotificationMessageConfig {
                 "========================================================\n";
         public static final String ALREADY_LINKED = "Your Reminder account already linked.";
         public static final String SUCCESS_LINK = "Hello {0}, since now you will be notified with your reminders!";
-        public static final String REQUIRES_AUTH = "Authenticate through [Reminder]({0}/account/telegram) for receive reminders";
+        public static final String REQUIRES_AUTH = "Authenticate through Reminder for receive reminders";
     }
 
 
@@ -28,9 +28,4 @@ public class TelegramNotificationMessageConfig {
     public static String formatSuccessLink(String username) {
         return MessageFormat.format(Messages.SUCCESS_LINK, username);
     }
-
-    public static String formatRequiresAuthMessage(String url) {
-        return MessageFormat.format(Messages.REQUIRES_AUTH,url);
-    }
-
 }

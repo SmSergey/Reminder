@@ -1,10 +1,9 @@
 package com.smirnov.app.notification.telegram.bot;
 
-import com.smirnov.app.config.ApplicationConfiguration;
 import com.smirnov.app.domain.user.User;
 import com.smirnov.app.domain.user.UserRepository;
-import com.smirnov.app.notification.telegram.bot.config.TelegramNotificationMessageConfig;
 import com.smirnov.app.notification.telegram.bot.config.ReminderBotConfiguration;
+import com.smirnov.app.notification.telegram.bot.config.TelegramNotificationMessageConfig;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -22,15 +21,13 @@ import java.text.MessageFormat;
 @Component
 public class ReminderTelegramBot extends TelegramLongPollingBot {
 
-    private final ApplicationConfiguration applicationConfiguration;
     private final ReminderBotConfiguration botConfig;
     private final UserRepository userRepository;
 
 
     public ReminderTelegramBot(TelegramBotsApi telegramBotsApi,
-                               ApplicationConfiguration applicationConfiguration, ReminderBotConfiguration reminderBotConfiguration,
+                               ReminderBotConfiguration reminderBotConfiguration,
                                UserRepository userRepository) throws TelegramApiException {
-        this.applicationConfiguration = applicationConfiguration;
         this.userRepository = userRepository;
         this.botConfig = reminderBotConfiguration;
         telegramBotsApi.registerBot(this);
@@ -89,11 +86,10 @@ public class ReminderTelegramBot extends TelegramLongPollingBot {
     }
 
     private void sendRequiresLoginResponse(Message message) throws TelegramApiException {
-        final String url = applicationConfiguration.getServerUrl();
 
         SendMessage responseMessage = SendMessage.builder()
                 .chatId(message.getChatId())
-                .text(TelegramNotificationMessageConfig.formatRequiresAuthMessage(url))
+                .text(TelegramNotificationMessageConfig.Messages.REQUIRES_AUTH)
                 .parseMode(ParseMode.MARKDOWNV2)
                 .build();
         execute(responseMessage);
