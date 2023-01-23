@@ -1,0 +1,24 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-users
+      author: Smirnov Sergey
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    unique: true
+              - column:
+                  name: email
+                  type: varchar(255)
+              - column:
+                  name: telegram_chat_id
+                  type: bigint
+                  constraints:
+                    unique: true
