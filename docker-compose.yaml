@@ -10,39 +10,39 @@ services:
     depends_on:
       - db
     environment:
-      SERVER_PORT: "8080"
-      SERVER_ADDRESS_IP: '0.0.0.0'
-      SERVER_SSL_ENABLED: "false"
+      SERVER_PORT:
+      SERVER_ADDRESS_IP:
+      SERVER_SSL_ENABLED:
 
-      POSTGRES_URL: jdbc:postgresql://db:5432/reminder_db
-      POSTGRES_USERNAME: postgres
-      POSTGRES_PASSWORD: admin
+      POSTGRES_URL:
+      POSTGRES_USERNAME:
+      POSTGRES_PASSWORD:
 
-      GOOGLE_CLIENT_ID: 553720632932-0ikm6cpi68s3onaf098iggqpio998b9a.apps.googleusercontent.com
-      GOOGLE_CLIENT_SECRET: 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
+      GOOGLE_CLIENT_ID:
+      GOOGLE_CLIENT_SECRET:
 
-      MAIL_HOST: smtp.gmail.com
-      MAIL_PORT: 587
-      MAIL_USERNAME: beloglazov.exceedteam@gmail.com
-      MAIL_PASSWORD: jnnizlgrcdhcmfnz
-      MAIL_SMTP_STARTTLS_ENABLED: "true"
-      MAIL_SMTP_AUTH_ENABLED: "true"
-      MAIL_SMTP_CONNECTION_TIMEOUT_ENABLED: "true"
-      MAIL_SMTP_CONNECTION_TIMEOUT_MS: 5000
-      MAIL_SMTP_CONNECTION_WRITE_TIMEOUT_MS: 5000
+      MAIL_HOST: #likely smtp.gmail.com
+      MAIL_PORT: #likely 587
+      MAIL_USERNAME:
+      MAIL_PASSWORD:
+      MAIL_SMTP_STARTTLS_ENABLED: #likely "true"
+      MAIL_SMTP_AUTH_ENABLED: #likely "true"
+      MAIL_SMTP_CONNECTION_TIMEOUT_ENABLED: #likely "true"
+      MAIL_SMTP_CONNECTION_TIMEOUT_MS: #likely 5000
+      MAIL_SMTP_CONNECTION_WRITE_TIMEOUT_MS: #likely 5000
 
-      TELEGRAM_BOT_USERNAME: clear_reminder_bot
-      TELEGRAM_BOT_TOKEN: 5838381714:AAEDZxNS9_QdtheuOzV7fu7XDqGTAbpQ2fg
+      TELEGRAM_BOT_USERNAME:
+      TELEGRAM_BOT_TOKEN:
 
   db:
     image: postgres
     container_name: reminder-db
     restart: always
     environment:
-      POSTGRES_DB: reminder_db
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: admin
+      POSTGRES_DB:
+      POSTGRES_USER:
+      POSTGRES_PASSWORD:
     ports:
-      - "5436:5432"
+      - "5435:5432"
     volumes:
       - ./postgres-data:/var/lib/postgresql/data
